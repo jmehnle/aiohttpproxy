@@ -1,6 +1,10 @@
+import sys
 import os
 import re
 from setuptools import setup
+
+if not sys.hexversion >= 0x30400f0:
+    raise RuntimeError("Python 3.4 or later required")
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
         'lib', 'aiohttpproxy', '__init__.py'), 'r') as f:

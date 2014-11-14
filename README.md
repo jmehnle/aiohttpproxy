@@ -8,10 +8,12 @@ Currently only GET requests to HTTP URLs are proxied.
 Installation
 ------------
 
+aiohttpproxy requires Python 3.4 or later.
+
 Install using your favorite Python packager:
 
-    $ easy_install aiohttpproxy-0.0.1/
-    $ pip install git+https://github.com/jmehnle/aiohttpproxy.git
+    $ easy_install-3.4 aiohttpproxy-0.0.1/
+    $ pip-3.4 install git+https://github.com/jmehnle/aiohttpproxy.git
 
 Usage
 -----
