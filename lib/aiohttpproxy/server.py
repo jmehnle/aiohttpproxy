@@ -62,8 +62,10 @@ class ProxyRequestHandler(aiohttp.server.ServerHttpProtocol):
             response_content = response.content
 
         if store_in_cache:
-            with suppress(ValueError):
+            try:
                 size = int(response.headers['Content-Length'])
+            except (ValueError, KeyError):
+                size = None
             try:
                 cache_metadata = { 'response': response }
                 cache_entry    = self.cache.new_entry(url, cache_metadata, size)
@@ -78,7 +80,15 @@ class ProxyRequestHandler(aiohttp.server.ServerHttpProtocol):
 
         proxy_response = aiohttp.Response(
             self.writer, response.status, http_version = response.version)
-        proxy_response.add_headers(*response.headers.items())
+        proxy_response_headers = [
+            (name, value)
+            for name, value
+            in response.headers.items(getall = True)
+            if name not in ('CONTENT-ENCODING')
+        ]
+            # Copy response headers, except for Content-Encoding header,
+            # since unfortunately aiohttp transparently decodes content.
+        proxy_response.add_headers(*proxy_response_headers)
         proxy_response.send_headers()
 
         try:
